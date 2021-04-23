@@ -7,7 +7,7 @@
         <th>Saldo</th>
         <th>Datos Habientes</th>
       </tr>
-      <tr v-bind:key="cuentas" v-for="cuentas in cuentasBancarias">
+      <tr v-for="cuentas in cuentasBancarias" :key="cuentas.id">
         <td>{{ cuentas[0].id }}</td>
         <td>{{ cuentas[0].saldo }}</td>
         <td>{{ cuentas[1] }}</td>
@@ -17,6 +17,8 @@
 </template>
 
 <script>
+const axios = require("axios");
+
 export default {
   name: "TablaBancaria",
   data() {
@@ -25,15 +27,10 @@ export default {
       cuentasBancarias: {},
     };
   },
-  beforeMount() {
-    this.obtenerDatos();
-  },
-  methods: {
-    async obtenerDatos() {
-      const respuesta = await fetch("https://localhost:4001/cuentas");
-      const datos = await respuesta.json();
-      this.cuentasBancarias = datos;
-    },
+  mounted() {
+     axios.get("https://localhost:4001/cuentas").then((datos) => {
+      this.cuentasBancarias = datos.data;
+    });
   },
 };
 </script>

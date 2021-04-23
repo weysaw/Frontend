@@ -6,7 +6,7 @@
         <th>Id</th>
         <th>Nombre</th>
       </tr>
-      <tr v-bind:key="hab" v-for="hab in habientes">
+      <tr v-for="hab in habientes" :key="hab.id">
         <td>{{ hab.id }}</td>
         <td>{{ hab.nombre }}</td>
       </tr>
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+const axios = require("axios");
+
 export default {
   name: "TablaHabiente",
   data() {
@@ -23,15 +25,10 @@ export default {
       habientes: {},
     };
   },
-  beforeMount() {
-    this.obtenerDatos();
-  },
-  methods: {
-    async obtenerDatos() {
-      const respuesta = await fetch("https://localhost:4001/habientes");
-      const datos = await respuesta.json();
-      this.habientes = datos;
-    },
+  mounted() {
+    axios.get("https://localhost:4001/habientes").then((datos) => {
+      this.habientes = datos.data;
+    });
   },
 };
 </script>
