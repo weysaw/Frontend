@@ -2,6 +2,7 @@
     margin: 0;
 }
 
+
 body {
     background-color: #252525;
     color: #ececec;
@@ -14,9 +15,37 @@ table {
     width: 50%;
 }
 
-table,
-td,
-th {
+table, td, th {
     border: 2px solid #fff;
     padding: 10px;
+}
+
+input {
+    background-color: #ffffff;
+    padding: 5px 0;
+    margin: auto;
+    text-align: center;
+    display: block;
+}
+
+input:hover {
+    background-color: #d6d6d6;
+}
+
+button {
+    margin: 10px 0;
+    padding: 7px 15px;
+    color: #fff;
+    border: none;
+    background-color: #3b3b3b;
+}
+
+button:hover {
+    color: #000;
+    background-color: #bdbdbd;
+}
+
+button:active {
+    background-color: red;
+    color: #fff;
 }
