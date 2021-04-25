@@ -41,7 +41,7 @@ export default {
 			try {
 				//Previene que no cambie de página
 				e.preventDefault();
-				const respuesta = await axios.put(
+				const respuesta = await axios.post(
 					`https://localhost:4001/cuentas/saldo/retirar`,
 					{
 						id: this.id,

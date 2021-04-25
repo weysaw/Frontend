@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Control from '../main';
+import Control from "../main";
 const axios = require(`axios`);
 
 export default {
@@ -33,9 +33,7 @@ export default {
 				//Previene que no cambie de página
 				e.preventDefault();
 				//Manda la solicitud y recibe la respuesta del servidor
-				const respuesta = await axios(`https://localhost:4001/cuentas/saldo`, {
-					params: { id: this.id },
-				});
+				const respuesta = await axios.get(`https://localhost:4001/cuentas/saldo/${this.id}`);
 				alert(respuesta?.data?.msg);
 				this.id = 1;
 			} catch (error) {

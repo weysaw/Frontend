@@ -33,13 +33,10 @@ export default {
 				//Previene que no cambie de página
 				e.preventDefault();
 				//Manda la solicitud y recibe la respuesta del servidor
-				await axios.delete("https://localhost:4001/habientes", {
-					data: { id: this.id },
-				});
-				alert("Datos eliminados con exito");
+				const respuesta = await axios.delete(`https://localhost:4001/habientes/${this.id}`);
+				alert(respuesta?.data?.msg);
 				//Manda un evento para que se actualize la tabla mostrada 
 				this.$root.$emit("actualizar", `Actualizate`);
-				this.nombre = "";
 			} catch (error) {
 				Control.validarError(error);
 			} 

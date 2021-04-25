@@ -52,7 +52,7 @@ export default {
 			try {
 				e.preventDefault();				
 				//Manda la solicitud y recibe la respuesta del servidor
-				const respuesta = await axios.put(
+				const respuesta = await axios.post(
 					"https://localhost:4001/cuentas/transferencia",
 					{
 						saldo: parseInt(this.saldo),

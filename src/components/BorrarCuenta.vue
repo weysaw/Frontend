@@ -33,9 +33,7 @@ export default {
 				//Previene que no cambie de página
 				e.preventDefault();
 				//Manda la solicitud y recibe la respuesta del servidor
-				const respuesta = await axios.delete("https://localhost:4001/cuentas", {
-					data: { id: this.id },
-				});
+				const respuesta = await axios.delete(`https://localhost:4001/cuentas/${this.id}`);
 				alert(respuesta.data.msg);
 				//Manda un evento para que se actualize la tabla mostrada 
 				this.$root.$emit("actualizar", `Actualizate`);

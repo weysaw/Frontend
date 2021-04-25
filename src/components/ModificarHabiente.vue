@@ -29,7 +29,7 @@ export default {
 				//Previene que no cambie de página
 				e.preventDefault();
 				//Manda la solicitud y recibe la respuesta del servidor
-				const respuesta = await axios.put("https://localhost:4001/habientes", {id : this.id, nombre: this.nombre});
+				const respuesta = await axios.put(`https://localhost:4001/habientes/${this.id}/`, {nombre: this.nombre});
 				alert(respuesta.data.msg);
 				//Manda un evento para que se actualize la tabla mostrada 
 				this.$root.$emit("actualizar", `Actualizate`);
