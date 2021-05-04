@@ -1,31 +1,37 @@
 <template>
 	<div class="retirar-saldo">
-		<h2>Retirar Saldo Cuenta</h2>
-		<form @submit="retirarSaldo" method="put">
-			Id<input
-				v-model="id"
-				type="number"
-				name="id"
-				min="1"
-				placeholder="Ingrese id cuenta"
-				required
-			/>
-			Saldo<input
-				v-model="saldo"
-				type="number"
-				name="id"
-				min="1"
-				placeholder="Ingrese saldo a retirar cuenta"
-				required
-			/>
-			<button type="submit">Retirar</button>
-		</form>
-		<p v-if="id == `` && saldo == ``">Favor de rellenar todos los campos</p>
+		<v-container>
+			<v-row>
+				<v-col cols="12" sm="4" class="ma-auto">
+					<h2>Retirar Saldo Cuenta</h2>
+					<v-form ref="form">
+						<v-text-field
+							v-model="id"
+							type="number"
+							label="Id"
+							:rules="validarId"
+							min="1"
+							placeholder="Ingrese id cuenta"
+							required
+						/>
+						<v-text-field
+							v-model="saldo"
+							type="number"
+							label="Saldo a retirar"
+							:rules="validarSaldo"
+							min="1"
+							placeholder="Ingrese saldo a retirar cuenta"
+							required
+						/>
+						<v-btn @click="retirarSaldo" light>Retirar</v-btn>
+					</v-form>
+				</v-col>
+			</v-row>
+		</v-container>
 	</div>
 </template>
 
 <script>
-import Control from '../main';
 const axios = require("axios");
 
 export default {
@@ -34,13 +40,21 @@ export default {
 		return {
 			id: ``,
 			saldo: ``,
+			validarId: [
+				(v) => !!v || "El id es obligatorio",
+				(v) => parseInt(v) >= 0 || "El id debe de ser positivo",
+			],
+			validarSaldo: [
+				(v) => !!v || "El saldo es obligatorio",
+				(v) => parseInt(v) >= 0 || "El saldo debe ser positivo",
+			],
 		};
 	},
 	methods: {
-		async retirarSaldo(e) {
+		async retirarSaldo() {
 			try {
-				//Previene que no cambie de página
-				e.preventDefault();
+				if (!this.$refs.form.validate())
+					throw { type: "Error", msg: `Rellene los campos que se indican` };
 				const respuesta = await axios.post(
 					`https://localhost:4001/cuentas/saldo/retirar`,
 					{
@@ -48,12 +62,12 @@ export default {
 						saldo: parseInt(this.saldo),
 					}
 				);
-				alert(respuesta.data.msg);
+				this.$root.$emit("mostrar", respuesta.data);
 				//Manda un evento para que se actualize la tabla mostrada
 				this.$root.$emit("actualizar", `Actualizate`);
 				this.id = this.saldo = ``;
 			} catch (error) {
-				Control.validarError(error);
+				this.$root.$emit("mostrar", error);
 			}
 		},
 	},

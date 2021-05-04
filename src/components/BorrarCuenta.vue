@@ -1,23 +1,28 @@
 <template>
 	<div class="borrar-cuenta">
-		<h2>Borrar Cuenta Bancaria</h2>
-		<form @submit="borrarCuenta" method="post">
-			Id<input
-				v-model="id"
-				type="number"
-				name="id"
-				min="1"
-				placeholder="Id Cuenta Bancaria"
-				required
-			/>
-			<button type="submit">Agregar</button>
-			<p v-if="id == ''">Favor de rellenar todos los campos</p>
-		</form>
+		<v-container>
+			<v-row>
+				<v-col cols="12" sm="4" class="ma-auto">
+					<h2>Borrar Cuenta Bancaria</h2>
+					<v-form ref="form">
+						<v-text-field
+							v-model="id"
+							type="number"
+							label="Id"
+							min="1"
+							:rules="validar"
+							placeholder="Id Cuenta Bancaria"
+							required
+						/>
+						<v-btn @click="borrarCuenta" light>Borrar</v-btn>
+					</v-form>
+				</v-col>
+			</v-row>
+		</v-container>
 	</div>
 </template>
 
 <script>
-import Control from '../main';
 const axios = require("axios");
 
 export default {
@@ -25,20 +30,28 @@ export default {
 	data() {
 		return {
 			id: "",
+			validar: [
+				(v) => !!v || `Este campo es obligatorio`,
+				(v) => parseInt(v) >= 0 || "El numero debe ser positivo",
+			],
 		};
 	},
 	methods: {
-		async borrarCuenta(e) {
+		async borrarCuenta() {
 			try {
-				//Previene que no cambie de página
-				e.preventDefault();
+				if (!this.$refs.form.validate())
+					throw { type: "Error", msg: `Rellene los campos que se indican` };
 				//Manda la solicitud y recibe la respuesta del servidor
-				const respuesta = await axios.delete(`https://localhost:4001/cuentas/${this.id}`);
-				alert(respuesta.data.msg);
-				//Manda un evento para que se actualize la tabla mostrada 
+				const respuesta = await axios.delete(
+					`https://localhost:4001/cuentas/${this.id}`
+				);
+				this.$root.$emit("mostrar", respuesta?.data);
+				//Manda un evento para que se actualize la tabla mostrada
 				this.$root.$emit("actualizar", `Actualizate`);
+				this.id = "";
+				this.$refs.form.resetValidation();
 			} catch (error) {
-				Control.validarError(error);			
+				this.$root.$emit("mostrar", error);
 			}
 		},
 	},

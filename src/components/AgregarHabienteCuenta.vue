@@ -1,33 +1,37 @@
 <template>
 	<div class="agregar-hav-cuenta">
-		<h2>Agregar Habiente a Cuenta Bancaria Existente</h2>
-		<form @submit="agregarHabCuenta" method="post">
-			Cuenta Habiente Id<input
-				v-model="habienteId"
-				type="number"
-				name="habienteId"
-				min="1"
-				placeholder="Id Cuenta Habiente"
-				required
-			/>
-			Cuenta Bancaria Id<input
-				v-model="bancariaId"
-				type="number"
-				name="bancariaId"
-				min="1"
-				placeholder="Id Cuenta Bancaria"
-				required
-			/>
-			<button type="submit">Agregar</button>
-			<p v-if="habienteId == '' || bancariaId == ''">
-				Favor de rellenar todos los campos
-			</p>
-		</form>
+		<v-container>
+			<v-row>
+				<v-col cols="12" sm="4" class="ma-auto">
+					<h2>Agregar Habiente a Cuenta Bancaria Existente</h2>
+					<v-form ref="form">
+						Cuenta Habiente Id<v-text-field
+							v-model="habienteId"
+							type="number"
+							name="habienteId"
+							:rules="validar"
+							min="1"
+							placeholder="Id Cuenta Habiente"
+							required
+						/>
+						Cuenta Bancaria Id<v-text-field
+							v-model="bancariaId"
+							type="number"
+							name="bancariaId"
+							:rules="validar"
+							min="1"
+							placeholder="Id Cuenta Bancaria"
+							required
+						/>
+						<v-btn @click="agregarHabCuenta" light>Agregar</v-btn>
+					</v-form>
+				</v-col>
+			</v-row>
+		</v-container>
 	</div>
 </template>
 
 <script>
-import Control from "../main";
 const axios = require("axios");
 
 export default {
@@ -36,13 +40,17 @@ export default {
 		return {
 			habienteId: ``,
 			bancariaId: ``,
+			validar: [
+				(v) => !!v || `Este campo es obligatorio`,
+				(v) => parseInt(v) >= 0 || `El numero debe ser positivo`,
+			],
 		};
 	},
 	methods: {
-		async agregarHabCuenta(e) {
+		async agregarHabCuenta() {
 			try {
-				//Previene que no cambie de página
-				e.preventDefault();
+				if (!this.$refs.form.validate())
+					throw { type: "Error", msg: `Rellene los campos que se indican` };
 				//Manda la solicitud y recibe la respuesta del servidor
 				const respuesta = await axios.post(
 					`https://localhost:4001/cuentas/habiente`,
@@ -51,12 +59,12 @@ export default {
 						bancariaId: parseInt(this.bancariaId),
 					}
 				);
-				console.log(respuesta);
-				alert(respuesta.data.msg);
+				this.$root.$emit("mostrar", respuesta?.data);
 				this.$root.$emit("actualizar", `Actualizate`);
 				this.habienteId = this.bancariaId = ``;
+				this.$refs.form.resetValidation();
 			} catch (error) {
-				Control.validarError(error);
+				this.$root.$emit("mostrar", error);
 			}
 		},
 	},

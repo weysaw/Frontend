@@ -1,48 +1,48 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link :to="{ name: 'Home' }">Inicio</router-link> 
-      <router-link :to="{ name: 'Habientes' }">Cuenta Habientes</router-link>
-      <router-link :to="{ name: 'CuentasBancarias'}">Cuentas Bancarias</router-link>
-    </div>
-    <router-view/>
-  </div>
+	<v-app id="inspire">
+		<v-navigation-drawer v-model="drawer" temporary app clipped>
+			<v-list>
+				<v-list-item>
+					<v-list-item-content>
+						<v-list-item-title class="title"> Opciones </v-list-item-title>
+						<v-list-item-subtitle> Seleccione una opción </v-list-item-subtitle>
+					</v-list-item-content>
+				</v-list-item>
+			</v-list>
+			<v-divider></v-divider>
+			<v-list nav dense rounded>
+				<v-list-item
+					v-for="([nombre, texto], i) in secciones"
+					:key="i"
+					:to="nombre"
+				>
+					<v-list-item-content v-text="texto"></v-list-item-content>
+				</v-list-item>
+			</v-list>
+		</v-navigation-drawer>
+
+		<v-app-bar app color="orange">
+			<v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+
+			<v-toolbar-title>CRUD Cuentas Bancarias y Cuentas Habientes</v-toolbar-title>
+		</v-app-bar>
+		<v-main class="text-center">
+			<v-fade-transition mode="out-in">
+				<router-view />
+			</v-fade-transition>
+		</v-main>
+	</v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-}
-
-#nav {
-  background-color: #505050;
-  text-align: left;
-}
-
-#nav a {
-  padding: 20px;
-  display: inline-block;
-  text-decoration: none;
-  font-weight: bold;
-  color: #b1b1b1;
-}
-
-@media (max-width: 600px) {
-  #nav a {
-    display: block;
-  }
-}
-
-#nav a.router-link-exact-active {
-  color: #00f1a9;
-}
-
-#nav a:hover {
-  background-color: #bbbbbb;
-}
-
-@import 'assets/css/style.css';
-</style>
+<script>
+export default {
+	data: () => ({
+		drawer: null,
+		secciones: [
+			["/", `Inicio`],
+			["/habientes", `Cuenta Habientes`],
+			["/cuentas", `Cuentas Bancarias`],
+		],
+	}),
+};
+</script>
