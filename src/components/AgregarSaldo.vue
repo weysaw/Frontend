@@ -1,33 +1,37 @@
 <template>
 	<div class="agregar-saldo">
-		<h2>Agregar Saldo Cuenta</h2>
-		<!--Formulario para los datos  -->
-		<form @submit="agregarSaldo" method="post">
-			Id Cuenta Bancaria<input
-				v-model="id"
-				type="number"
-				name="id"
-				min="1"
-				placeholder="Ingrese id cuenta"
-				required
-			/>
-			Saldo a agregar<input
-				v-model="saldo"
-				type="number"
-				name="id"
-				min="1"
-				placeholder="Ingrese saldo cuenta"
-				required
-			/>
-			<button type="submit">Agregar</button>
-		</form>
-		<!-- Mensaje que se muestra si los datos no esta correctos -->
-		<p v-if="id == `` || saldo == ``">Favor de rellenar todos los campos</p>
+		<v-container>
+			<v-row>
+				<v-col cols="12" sm="4" class="ma-auto">
+					<h2>Agregar Saldo Cuenta</h2>
+					<v-form ref="form">
+						<v-text-field
+							v-model="id"
+							type="number"
+							label="Id Cuenta Bancaria"
+							min="1"
+							:rules="validarId"
+							placeholder="Ingrese id cuenta"
+							required
+						/>
+						<v-text-field
+							v-model="saldo"
+							type="number"
+							label="Saldo a agregar"
+							min="1"
+							:rules="validarSaldo"
+							placeholder="Ingrese saldo cuenta"
+							required
+						/>
+						<v-btn @click="agregarSaldo" light>Agregar</v-btn>
+					</v-form>
+				</v-col>
+			</v-row>
+		</v-container>
 	</div>
 </template>
 
 <script>
-import Control from "../main";
 const axios = require("axios");
 
 export default {
@@ -36,13 +40,21 @@ export default {
 		return {
 			id: ``,
 			saldo: ``,
+			validarId: [
+				(v) => !!v || "El id es obligatorio",
+				(v) => parseInt(v) >= 0 || "El id debe de ser positivo",
+			],
+			validarSaldo: [
+				(v) => !!v || "El saldo es obligatorio",
+				(v) => parseInt(v) >= 0 || "El saldo debe ser positivo",
+			],
 		};
 	},
 	methods: {
-		async agregarSaldo(e) {
+		async agregarSaldo() {
 			try {
-				//Previene que no cambie de página
-				e.preventDefault();
+				if (!this.$refs.form.validate())
+					throw { type: "Error", msg: `Rellene los campos que se indican` };
 				//Realiza una peticion al servidor
 				const respuesta = await axios.post(
 					`https://localhost:4001/cuentas/saldo`,
@@ -53,11 +65,11 @@ export default {
 				);
 				//Manda un evento para que se actualize la tabla mostrada
 				this.$root.$emit("actualizar", `Actualizate`);
-				alert(respuesta.data.msg);
+				this.$root.$emit("mostrar", respuesta.data);
 				//Se vacian los datos del formulario
 				this.id = this.saldo = ``;
 			} catch (error) {
-				Control.validarError(error);
+				this.$root.$emit("mostrar", error);
 			}
 		},
 	},
