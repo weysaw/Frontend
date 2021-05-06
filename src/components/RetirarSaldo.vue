@@ -1,33 +1,38 @@
 <template>
 	<div class="retirar-saldo">
-		<v-container>
-			<v-row>
-				<v-col cols="12" sm="4" class="ma-auto">
-					<h2>Retirar Saldo Cuenta</h2>
+		<v-dialog v-model="dialog" max-width="500px">
+			<template v-slot:activator="{ on, attrs }">
+				<v-btn small light class="mb-2" v-bind="attrs" v-on="on">
+					Retirar Saldo
+				</v-btn>
+			</template>
+			<v-card>
+				<v-card-title
+					>Retirar Saldo Cuenta Bancaria con ID = {{ id }}</v-card-title
+				>
+				<v-divider />
+				<v-card-text>
 					<v-form ref="form">
-						<v-text-field
-							v-model="id"
-							type="number"
-							label="Id"
-							:rules="validarId"
-							min="1"
-							placeholder="Ingrese id cuenta"
-							required
-						/>
 						<v-text-field
 							v-model="saldo"
 							type="number"
 							label="Saldo a retirar"
 							:rules="validarSaldo"
+							color="orange"
 							min="1"
+							:max="defectoSaldo"
 							placeholder="Ingrese saldo a retirar cuenta"
 							required
 						/>
-						<v-btn @click="retirarSaldo" light>Retirar</v-btn>
 					</v-form>
-				</v-col>
-			</v-row>
-		</v-container>
+				</v-card-text>
+				<v-card-actions>
+					<v-spacer />
+					<v-btn @click="cerrar" color="orange" text>Cerrar</v-btn>
+					<v-btn @click="retirarSaldo" color="orange" text>Retirar</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -36,19 +41,24 @@ const axios = require("axios");
 
 export default {
 	name: "RetirarSaldo",
+	props: {
+		defectoSaldo: Number,
+		id: Number,
+	},
 	data() {
 		return {
-			id: ``,
-			saldo: ``,
-			validarId: [
-				(v) => !!v || "El id es obligatorio",
-				(v) => parseInt(v) >= 0 || "El id debe de ser positivo",
-			],
+			saldo: "",
+			dialog: false,
 			validarSaldo: [
 				(v) => !!v || "El saldo es obligatorio",
 				(v) => parseInt(v) >= 0 || "El saldo debe ser positivo",
 			],
 		};
+	},
+	watch: {
+		dialog(val) {
+			val || this.cerrar();
+		},
 	},
 	methods: {
 		async retirarSaldo() {
@@ -65,10 +75,15 @@ export default {
 				this.$root.$emit("mostrar", respuesta.data);
 				//Manda un evento para que se actualize la tabla mostrada
 				this.$root.$emit("actualizar", `Actualizate`);
-				this.id = this.saldo = ``;
+				this.saldo = ``;
 			} catch (error) {
 				this.$root.$emit("mostrar", error);
 			}
+		},
+		cerrar() {			
+			this.dialog = false;
+			this.saldo = this.defectoSaldo;
+			this.$refs.form.resetValidation();
 		},
 	},
 };

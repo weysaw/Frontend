@@ -1,22 +1,33 @@
 <template>
 	<div class="agregar-hab">
-		<v-container>
-			<v-row>
-				<v-col cols="12" sm="6" class="ma-auto">
-					<h2>Agregar habiente</h2>
+		<v-dialog v-model="dialog" max-width="500px">
+			<template v-slot:activator="{ on, attrs }">
+				<v-btn class="mb-2" color="orange" text v-bind="attrs" v-on="on">
+					Nuevo Habiente
+				</v-btn>
+			</template>
+			<v-card>
+				<v-card-title>Agregar Cuenta Habiente</v-card-title>
+				<v-divider />
+				<v-card-text>
 					<v-form ref="form">
 						<v-text-field
 							v-model="nombre"
 							label="Nombre"
 							placeholder="Ingrese el nombre"
 							:rules="validarNombre"
+							color="orange"
 							required
 						></v-text-field>
-						<v-btn @click="enviarDato" light>Enviar</v-btn>
 					</v-form>
-				</v-col>
-			</v-row>
-		</v-container>
+				</v-card-text>
+				<v-card-actions>
+					<v-spacer />
+					<v-btn @click="cerrar" color="orange" text>Cerrar</v-btn>
+					<v-btn @click="enviarDato" color="orange" text>Enviar</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -27,9 +38,15 @@ export default {
 	name: "AgregarHabiente",
 	data() {
 		return {
+			dialog: false,
 			nombre: "",
 			validarNombre: [(v) => !!v || "El nombre debe de rellenarse"],
 		};
+	},
+	watch: {
+		dialog(val) {
+			val || this.cerrar();
+		},
 	},
 	methods: {
 		async enviarDato() {
@@ -43,11 +60,15 @@ export default {
 				this.$root.$emit("mostrar", respuesta.data);
 				//Manda a actualizar la tabla
 				this.$root.$emit("actualizar", `Actualizate`);
-				this.nombre = "";
-				this.$refs.form.resetValidation();
+				this.cerrar();
 			} catch (error) {
 				this.$root.$emit("mostrar", error);
 			}
+		},
+		cerrar() {
+			this.nombre = "";
+			this.$refs.form.resetValidation();
+			this.dialog = false;
 		},
 	},
 };

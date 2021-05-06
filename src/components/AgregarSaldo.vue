@@ -1,33 +1,37 @@
 <template>
 	<div class="agregar-saldo">
-		<v-container>
-			<v-row>
-				<v-col cols="12" sm="4" class="ma-auto">
-					<h2>Agregar Saldo Cuenta</h2>
+		<v-dialog v-model="dialog" max-width="500px">
+			<template v-slot:activator="{ on, attrs }">
+				<v-btn small  light class="mb-2" v-bind="attrs" v-on="on">
+					Agregar Saldo
+				</v-btn>
+			</template>
+			<v-card>
+				<v-card-title
+					>Agregar Saldo Cuenta Bancaria con ID = {{ id }}</v-card-title
+				>
+				<v-divider />
+				<v-card-text>
 					<v-form ref="form">
-						<v-text-field
-							v-model="id"
-							type="number"
-							label="Id Cuenta Bancaria"
-							min="1"
-							:rules="validarId"
-							placeholder="Ingrese id cuenta"
-							required
-						/>
 						<v-text-field
 							v-model="saldo"
 							type="number"
-							label="Saldo a agregar"
-							min="1"
+							label="Saldo a retirar"
 							:rules="validarSaldo"
-							placeholder="Ingrese saldo cuenta"
+							color="orange"
+							min="1"
+							placeholder="Ingrese saldo a retirar cuenta"
 							required
 						/>
-						<v-btn @click="agregarSaldo" light>Agregar</v-btn>
 					</v-form>
-				</v-col>
-			</v-row>
-		</v-container>
+				</v-card-text>
+				<v-card-actions>
+					<v-spacer />
+					<v-btn @click="cerrar" color="orange" text>Cerrar</v-btn>
+					<v-btn @click="agregarSaldo" color="orange" text>Agregar</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -36,19 +40,23 @@ const axios = require("axios");
 
 export default {
 	name: "AgregarSaldo",
+	props: {
+		id: Number,
+	},
 	data() {
 		return {
-			id: ``,
-			saldo: ``,
-			validarId: [
-				(v) => !!v || "El id es obligatorio",
-				(v) => parseInt(v) >= 0 || "El id debe de ser positivo",
-			],
+			saldo: "",
+			dialog: false,
 			validarSaldo: [
 				(v) => !!v || "El saldo es obligatorio",
 				(v) => parseInt(v) >= 0 || "El saldo debe ser positivo",
 			],
 		};
+	},
+	watch: {
+		dialog(val) {
+			val || this.cerrar();
+		},
 	},
 	methods: {
 		async agregarSaldo() {
@@ -67,10 +75,15 @@ export default {
 				this.$root.$emit("actualizar", `Actualizate`);
 				this.$root.$emit("mostrar", respuesta.data);
 				//Se vacian los datos del formulario
-				this.id = this.saldo = ``;
+				this.cerrar();
 			} catch (error) {
 				this.$root.$emit("mostrar", error);
 			}
+		},
+		cerrar() {
+			this.dialog = false;
+			this.saldo = ``;
+			this.$refs.form.resetValidation();
 		},
 	},
 };

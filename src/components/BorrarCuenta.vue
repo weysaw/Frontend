@@ -1,24 +1,25 @@
 <template>
 	<div class="borrar-cuenta">
-		<v-container>
-			<v-row>
-				<v-col cols="12" sm="4" class="ma-auto">
-					<h2>Borrar Cuenta Bancaria</h2>
-					<v-form ref="form">
-						<v-text-field
-							v-model="id"
-							type="number"
-							label="Id"
-							min="1"
-							:rules="validar"
-							placeholder="Id Cuenta Bancaria"
-							required
-						/>
-						<v-btn @click="borrarCuenta" light>Borrar</v-btn>
-					</v-form>
-				</v-col>
-			</v-row>
-		</v-container>
+		<v-dialog v-model="dialog" max-width="500px">
+			<template v-slot:activator="{ on, attrs }">
+				<v-icon large class="mr-2"  v-bind="attrs" v-on="on">
+					mdi-delete
+				</v-icon>
+			</template>
+			<v-card>
+				<v-card-title class="headline">Borrar Cuenta Bancaria</v-card-title>
+				<v-card-text
+					>¿Esta seguro que quiere borrar esta cuenta Bancaria? con id
+					{{ id }}</v-card-text
+				>
+				<v-card-actions>
+					<v-spacer></v-spacer>
+					<v-btn color="orange" text @click="cerrar">Cancelar</v-btn>
+					<v-btn color="orange" text @click="borrarCuenta">OK</v-btn>
+					<v-spacer></v-spacer>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -27,36 +28,37 @@ const axios = require("axios");
 
 export default {
 	name: "BorrarCuenta",
+	props: {
+		id: Number,
+	},
 	data() {
 		return {
-			id: "",
-			validar: [
-				(v) => !!v || `Este campo es obligatorio`,
-				(v) => parseInt(v) >= 0 || "El numero debe ser positivo",
-			],
+			dialog: false,
 		};
+	},
+	watch: {
+		dialog(val) {
+			val || this.cerrar();
+		},
 	},
 	methods: {
 		async borrarCuenta() {
 			try {
-				if (!this.$refs.form.validate())
-					throw { type: "Error", msg: `Rellene los campos que se indican` };
-				//Manda la solicitud y recibe la respuesta del servidor
 				const respuesta = await axios.delete(
 					`https://localhost:4001/cuentas/${this.id}`
 				);
 				this.$root.$emit("mostrar", respuesta?.data);
 				//Manda un evento para que se actualize la tabla mostrada
 				this.$root.$emit("actualizar", `Actualizate`);
-				this.id = "";
-				this.$refs.form.resetValidation();
 			} catch (error) {
 				this.$root.$emit("mostrar", error);
+			} finally {
+				this.cerrar();
 			}
+		},
+		cerrar() {
+			this.dialog = false;
 		},
 	},
 };
 </script>
-
-<style>
-</style>

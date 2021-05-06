@@ -1,24 +1,25 @@
 <template>
 	<div class="eliminar-hab">
-		<v-container>
-			<v-row>
-				<v-col cols="12" sm="4" class="ma-auto">
-					<h2>Eliminar habiente</h2>
-					<v-form ref="form">
-						<v-text-field
-							v-model="id"
-							label="Id"
-							type="number"
-							:rules="validarId"
-							min="1"
-							placeholder="Ingrese id"
-							required
-						></v-text-field>
-						<v-btn @click="eliminarDato" light>Enviar</v-btn>
-					</v-form>
-				</v-col>
-			</v-row>
-		</v-container>
+		<v-dialog v-model="dialog" max-width="500px">
+			<template v-slot:activator="{ on, attrs }">
+				<v-icon small class="mr-2" v-bind="attrs" v-on="on">
+					mdi-delete
+				</v-icon>
+			</template>
+			<v-card>
+				<v-card-title class="headline">Borrar Cuenta Habiente</v-card-title>
+				<v-card-text
+					>¿Esta seguro que quiere borrar esta cuenta habiente? con id
+					{{ id }}</v-card-text
+				>
+				<v-card-actions>
+					<v-spacer></v-spacer>
+					<v-btn color="orange" text @click="cerrar">Cancelar</v-btn>
+					<v-btn color="orange" text @click="eliminarDato">OK</v-btn>
+					<v-spacer></v-spacer>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -27,20 +28,22 @@ const axios = require(`axios`);
 
 export default {
 	name: "EliminarHabiente",
+	props: {
+		id: Number,
+	},
 	data() {
 		return {
-			id: 1,
-			validarId: [
-				(v) => !!v || "Ingrese un id valido",
-				(v) => parseInt(v) >= 0 || "El id debe de ser positivo",
-			],
+			dialog: false,
 		};
+	},
+	watch: {
+		dialog(val) {
+			val || this.cerrar();
+		},
 	},
 	methods: {
 		async eliminarDato() {
 			try {
-				if (!this.$refs.form.validate())
-					throw { type: "Error", msg: `Rellene los campos que se indican` };
 				//Manda la solicitud y recibe la respuesta del servidor
 				const respuesta = await axios.delete(
 					`https://localhost:4001/habientes/${this.id}`
@@ -48,11 +51,14 @@ export default {
 				this.$root.$emit("mostrar", respuesta.data);
 				//Manda un evento para que se actualize la tabla mostrada
 				this.$root.$emit("actualizar", `Actualizate`);
-				this.id = "";
-				this.$refs.form.resetValidation();
 			} catch (error) {
 				this.$root.$emit("mostrar", error);
+			} finally {
+				this.cerrar();
 			}
+		},
+		cerrar() {
+			this.dialog = false;
 		},
 	},
 };
