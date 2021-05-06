@@ -21,6 +21,7 @@
 										min="1"
 										:rules="validarId"
 										placeholder="Ingrese id habiente"
+										color="orange"
 										required
 									/>
 								</v-col>
@@ -32,6 +33,7 @@
 										min="1"
 										:rules="validarSaldo"
 										placeholder="Ingrese saldo cuenta"
+										color="orange"
 										required
 									/>
 								</v-col>
@@ -41,8 +43,10 @@
 				</v-card-text>
 				<v-card-actions>
 					<v-spacer />
-					<v-btn color="orange" text @click="cerrar" >Cerrar</v-btn>
-					<v-btn color="orange" text @click="agregarCuenta" >Agregar Cuenta</v-btn>
+					<v-btn color="orange" text @click="cerrar">Cerrar</v-btn>
+					<v-btn color="orange" text @click="agregarCuenta"
+						>Agregar Cuenta</v-btn
+					>
 				</v-card-actions>
 			</v-card>
 		</v-dialog>
@@ -83,7 +87,7 @@ export default {
 				this.$root.$emit("mostrar", respuesta.data);
 				//Actualiza la tabla
 				this.$root.$emit("actualizar", `Actualizate`);
-				this.cerrar();	
+				this.cerrar();
 			} catch (error) {
 				this.$root.$emit("mostrar", error);
 			}

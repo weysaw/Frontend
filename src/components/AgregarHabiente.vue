@@ -16,14 +16,15 @@
 							label="Nombre"
 							placeholder="Ingrese el nombre"
 							:rules="validarNombre"
+							color="orange"
 							required
 						></v-text-field>
 					</v-form>
 				</v-card-text>
 				<v-card-actions>
 					<v-spacer />
-					<v-btn @click="enviarDato" light>Enviar</v-btn>
-					<v-btn @click="cerrar" light>Cerrar</v-btn>
+					<v-btn @click="cerrar" color="orange" text>Cerrar</v-btn>
+					<v-btn @click="enviarDato" color="orange" text>Enviar</v-btn>
 				</v-card-actions>
 			</v-card>
 		</v-dialog>

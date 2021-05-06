@@ -23,6 +23,7 @@
 										label="Saldo"
 										:rules="validar"
 										placeholder="saldo transferir"
+										color="orange"
 										min="1"
 										required
 									/>
@@ -34,6 +35,7 @@
 										label="Cuenta Bancaria Destino"
 										:rules="validar"
 										placeholder="ID"
+										color="orange"
 										min="1"
 										required
 									/>

@@ -16,6 +16,7 @@
 							label="Nombre"
 							placeholder="Ingrese el nombre"
 							:rules="validarNombre"
+							color="orange"
 							required
 						></v-text-field>
 					</v-form>

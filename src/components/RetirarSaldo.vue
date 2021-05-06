@@ -18,6 +18,7 @@
 							type="number"
 							label="Saldo a retirar"
 							:rules="validarSaldo"
+							color="orange"
 							min="1"
 							:max="defectoSaldo"
 							placeholder="Ingrese saldo a retirar cuenta"
