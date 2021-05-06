@@ -1,32 +1,32 @@
 <template>
 	<div class="modificar-habiente">
-		<v-container>
-			<v-row>
-				<v-col cols="12" sm="6" class="ma-auto">
-					<h2>Modificar habiente</h2>
+		<v-dialog v-model="dialog" max-width="500px">
+			<template v-slot:activator="{ on, attrs }">
+				<v-icon small class="mr-2" v-bind="attrs" v-on="on">
+					mdi-pencil
+				</v-icon>
+			</template>
+			<v-card>
+				<v-card-title>Modificar Cuenta Habiente</v-card-title>
+				<v-divider />
+				<v-card-text>
 					<v-form ref="form">
 						<v-text-field
-							v-model="id"
-							type="number"
-							min="1"
-							label="Id"
-							:rules="validarId"
-							placeholder="Ingrese num"
-							required
-						/>
-						<v-text-field
 							v-model="nombre"
-							type="text"
-							:rules="validarNombre"
 							label="Nombre"
-							placeholder="Nombre habiente"
+							placeholder="Ingrese el nombre"
+							:rules="validarNombre"
 							required
-						/>
-						<v-btn light @click="ingresarDatos">Enviar</v-btn>
+						></v-text-field>
 					</v-form>
-				</v-col>
-			</v-row>
-		</v-container>
+				</v-card-text>
+				<v-card-actions>
+					<v-spacer />
+					<v-btn @click="cerrar" color="orange" text>Cerrar</v-btn>
+					<v-btn @click="modificarDatos" color="orange" text>Enviar</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -35,37 +35,44 @@ const axios = require("axios");
 
 export default {
 	name: "ModificarHabiente",
+	props: {
+		habiente: Object,
+	},
 	data() {
 		return {
-			id: 1,
+			dialog: false,
 			nombre: "",
-			validarId: [
-				(v) => !!v || "Ingrese un id valido",
-				(v) => parseInt(v) >= 0 || "El id debe de ser positivo",
-			],
 			validarNombre: [(v) => !!v || "El nombre debe de rellenarse"],
 		};
 	},
+	watch: {
+		dialog(val) {
+			this.nombre = this.habiente.nombre;
+			val || this.cerrar();
+		},
+	},
 	methods: {
-		async ingresarDatos() {
+		async modificarDatos() {
 			try {
-				//Previene que no cambie de página
 				if (!this.$refs.form.validate())
 					throw { type: "Error", msg: `Rellene los campos que se indican` };
 				//Manda la solicitud y recibe la respuesta del servidor
 				const respuesta = await axios.put(
-					`https://localhost:4001/habientes/${this.id}/`,
+					`https://localhost:4001/habientes/${this.habiente.id}/`,
 					{ nombre: this.nombre }
 				);
 				this.$root.$emit("mostrar", respuesta.data);
 				//Manda un evento para que se actualize la tabla mostrada
 				this.$root.$emit("actualizar", `Actualizate`);
-				this.nombre = "";
 				this.$refs.form.resetValidation();
+				this.cerrar();
 			} catch (error) {
 				//Muestra el error dependiendo si lo manda el server
 				this.$root.$emit("mostrar", error);
 			}
+		},
+		cerrar() {
+			this.dialog = false;
 		},
 	},
 };

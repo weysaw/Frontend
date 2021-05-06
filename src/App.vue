@@ -24,12 +24,16 @@
 		<v-app-bar app color="orange">
 			<v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-			<v-toolbar-title>CRUD Cuentas Bancarias y Cuentas Habientes</v-toolbar-title>
+			<v-toolbar-title
+				>CRUD Cuentas Bancarias y Cuentas Habientes</v-toolbar-title
+			>
 		</v-app-bar>
 		<v-main class="text-center">
-			<v-fade-transition mode="out-in">
-				<router-view />
-			</v-fade-transition>
+			<v-container fluid>
+				<v-fade-transition mode="out-in">
+					<router-view />
+				</v-fade-transition>
+			</v-container>
 		</v-main>
 	</v-app>
 </template>

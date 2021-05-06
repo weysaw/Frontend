@@ -1,33 +1,51 @@
 <template>
 	<div class="agregar-cuenta">
-		<v-container>
-			<v-row>
-				<v-col cols="12" sm="4" class="ma-auto">
-					<h2>Agregar Cuenta Bancaria</h2>
+		<v-dialog v-model="dialog" max-width="500px">
+			<template v-slot:activator="{ on, attrs }">
+				<v-btn color="orange" text class="mb-2" v-bind="attrs" v-on="on">
+					Nueva Cuenta Bancaria
+				</v-btn>
+			</template>
+			<v-card>
+				<v-card-title>Agregar Cuenta Bancaria</v-card-title>
+				<v-divider />
+				<v-card-text>
 					<v-form ref="form">
-						<v-text-field
-							type="number"
-							v-model="habienteId"
-							label="habienteId"
-							min="1"
-							:rules="validarId"
-							placeholder="Ingrese id habiente"
-							required
-						/>
-						<v-text-field
-							type="number"
-							v-model="saldo"
-							label="Saldo"
-							min="1"
-							:rules="validarSaldo"
-							placeholder="Ingrese saldo cuenta"
-							required
-						/>
-						<v-btn @click="agregarCuenta" light>Agregar Cuenta</v-btn>
+						<v-container>
+							<v-row>
+								<v-col cols="12" sm="6"
+									><v-text-field
+										type="number"
+										v-model="habienteId"
+										label="habienteId"
+										min="1"
+										:rules="validarId"
+										placeholder="Ingrese id habiente"
+										required
+									/>
+								</v-col>
+								<v-col cols="12" sm="6"
+									><v-text-field
+										type="number"
+										v-model="saldo"
+										label="Saldo"
+										min="1"
+										:rules="validarSaldo"
+										placeholder="Ingrese saldo cuenta"
+										required
+									/>
+								</v-col>
+							</v-row>
+						</v-container>
 					</v-form>
-				</v-col>
-			</v-row>
-		</v-container>
+				</v-card-text>
+				<v-card-actions>
+					<v-spacer />
+					<v-btn color="orange" text @click="cerrar" >Cerrar</v-btn>
+					<v-btn color="orange" text @click="agregarCuenta" >Agregar Cuenta</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 
@@ -38,6 +56,7 @@ export default {
 	name: "AgregarCuenta",
 	data() {
 		return {
+			dialog: false,
 			saldo: "",
 			habienteId: "",
 			validarId: [
@@ -60,12 +79,20 @@ export default {
 					saldo: this.saldo,
 					habienteId: this.habienteId,
 				});
+				//Muestra el dialog con el dato
 				this.$root.$emit("mostrar", respuesta.data);
+				//Actualiza la tabla
 				this.$root.$emit("actualizar", `Actualizate`);
-				this.$refs.form.resetValidation();
+				this.cerrar();	
 			} catch (error) {
 				this.$root.$emit("mostrar", error);
 			}
+		},
+		cerrar() {
+			this.saldo = "";
+			this.habienteId = ``;
+			this.$refs.form.resetValidation();
+			this.dialog = false;
 		},
 	},
 };
