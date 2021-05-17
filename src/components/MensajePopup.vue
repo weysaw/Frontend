@@ -7,7 +7,7 @@
 				<v-card-text class="mt-5">{{ texto }}</v-card-text>
 				<v-card-actions>
 					<v-spacer></v-spacer>
-					<v-btn @click="dialog = false"> OK </v-btn>
+					<v-btn color="orange" text @click="dialog = false"> Aceptar </v-btn>
 				</v-card-actions>
 			</v-card>
 		</v-dialog>

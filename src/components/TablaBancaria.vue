@@ -28,7 +28,9 @@
 							<TransferenciaBancaria
 								:origenId="item.id"
 							></TransferenciaBancaria>
-							<AgregarHabienteCuenta :bancariaId="item.id"></AgregarHabienteCuenta>
+							<AgregarHabienteCuenta
+								:bancariaId="item.id"
+							></AgregarHabienteCuenta>
 							<BorrarCuenta :id="item.id"></BorrarCuenta>
 						</template>
 					</v-data-table>
@@ -48,7 +50,7 @@
 
 <script>
 import AgregarCuenta from "./AgregarCuenta.vue";
-import AgregarHabienteCuenta from './AgregarHabienteCuenta.vue';
+import AgregarHabienteCuenta from "./AgregarHabienteCuenta.vue";
 import AgregarSaldo from "./AgregarSaldo.vue";
 import BorrarCuenta from "./BorrarCuenta.vue";
 import ConsultarSaldo from "./ConsultarSaldo.vue";
@@ -64,7 +66,7 @@ export default {
 		AgregarSaldo,
 		TransferenciaBancaria,
 		BorrarCuenta,
-AgregarHabienteCuenta,
+		AgregarHabienteCuenta,
 	},
 	name: "TablaBancaria",
 	data() {
@@ -83,6 +85,7 @@ AgregarHabienteCuenta,
 		};
 	},
 	mounted() {
+		
 		this.mostrar();
 		this.$root.$on("actualizar", () => {
 			this.mostrar();

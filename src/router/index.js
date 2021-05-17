@@ -16,12 +16,14 @@ const routes = [
   {
     path: '/habientes',
     name: 'Habientes',
-    component: Habientes
+    component: Habientes,
+    beforeEnter: estaEnSesion
   },
   {
     path: '/cuentas',
     name: 'CuentasBancarias',
-    component: CuentasBancarias
+    component: CuentasBancarias,
+    beforeEnter: estaEnSesion
   },
   {
     path: `*`,
@@ -36,4 +38,8 @@ const router = new VueRouter({
   routes
 })
 
+function estaEnSesion(to, from, next) {
+  if (!localStorage.getItem("token")) next({ name: 'Inicio' });
+  else next();
+}
 export default router
