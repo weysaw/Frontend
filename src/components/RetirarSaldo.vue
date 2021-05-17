@@ -76,6 +76,7 @@ export default {
 				//Manda un evento para que se actualize la tabla mostrada
 				this.$root.$emit("actualizar", `Actualizate`);
 				this.saldo = ``;
+				this.cerrar();
 			} catch (error) {
 				this.$root.$emit("mostrar", error);
 			}
