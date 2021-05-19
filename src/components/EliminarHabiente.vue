@@ -7,9 +7,9 @@
 				</v-icon>
 			</template>
 			<v-card>
-				<v-card-title class="headline">Borrar Cuenta Habiente</v-card-title>
+				<v-card-title class="headline">Borrar CuentaHabiente</v-card-title>
 				<v-card-text
-					>¿Esta seguro que quiere borrar esta cuenta habiente? con id
+					>¿Esta seguro que quiere borrar esta cuentahabiente? con id
 					{{ id }}</v-card-text
 				>
 				<v-card-actions>

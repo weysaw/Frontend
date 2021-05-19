@@ -3,7 +3,7 @@
 		<v-dialog v-model="dialog" max-width="500px">
 			<template v-slot:activator="{ on, attrs }">
 				<v-btn small light class="mb-2" v-bind="attrs" v-on="on">
-					Agregar Cuenta Habiente
+					Agregar CuentaHabiente
 				</v-btn>
 			</template>
 			<v-card>
@@ -13,7 +13,7 @@
 				<v-divider />
 				<v-card-text>
 					<h3>
-						Agrega cuenta habiente con id {{ habienteId }} a cuenta bancaria con
+						Agregar cuentahabiente con id {{ habienteId }} a cuenta bancaria con
 						id {{ bancariaId }}
 					</h3>
 					<v-form ref="form">

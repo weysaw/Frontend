@@ -7,7 +7,7 @@
 				</v-btn>
 			</template>
 			<v-card>
-				<v-card-title>Agregar Cuenta Habiente</v-card-title>
+				<v-card-title>Agregar CuentaHabiente</v-card-title>
 				<v-divider />
 				<v-card-text>
 					<v-form ref="form">

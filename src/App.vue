@@ -57,7 +57,7 @@ export default {
 		sesion: false,
 		secciones: [
 			["/", `Inicio`],
-			["/habientes", `Cuenta Habientes`],
+			["/cuentahabientes", `CuentaHabientes`],
 			["/cuentas", `Cuentas Bancarias`],
 		],
 	}),
