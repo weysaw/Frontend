@@ -14,8 +14,8 @@ const routes = [
     component: Home
   },
   {
-    path: '/habientes',
-    name: 'Habientes',
+    path: '/cuentahabientes',
+    name: 'CuentaHabientes',
     component: Habientes,
     beforeEnter: estaEnSesion
   },
@@ -33,7 +33,6 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

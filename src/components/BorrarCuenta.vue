@@ -9,7 +9,7 @@
 			<v-card>
 				<v-card-title class="headline">Borrar Cuenta Bancaria</v-card-title>
 				<v-card-text
-					>¿Esta seguro que quiere borrar esta cuenta Bancaria? con id
+					>¿Esta seguro que quiere borrar esta Cuenta Bancaria? con id
 					{{ id }}</v-card-text
 				>
 				<v-card-actions>

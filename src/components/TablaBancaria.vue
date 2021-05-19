@@ -85,7 +85,6 @@ export default {
 		};
 	},
 	mounted() {
-		
 		this.mostrar();
 		this.$root.$on("actualizar", () => {
 			this.mostrar();
@@ -99,18 +98,29 @@ export default {
 				.then((datos) => {
 					this.cuentasBancarias = [];
 					const cuentas = datos.data;
+					const filtrarDatos = (cuentas) => {
+						let texto = "";
+						for (const cuentahab of cuentas)
+							texto +=
+								"id: " +
+								cuentahab.habienteId +
+								", nombre: " +
+								cuentahab.nombre +
+								". ";
+
+						return texto;
+					};
 					for (const cuenta of cuentas) {
 						this.cuentasBancarias.push({
 							id: cuenta[0].id,
 							saldo: cuenta[0].saldo,
-							datos: JSON.stringify(cuenta[1]),
+							datos: filtrarDatos(cuenta[1]),
 						});
 					}
 					this.cargando = false;
 				})
 				.catch((error) => {
 					console.error(error);
-
 					this.textoError =
 						"No se ha podido realizar una conexión con el servidor, Intentando de nuevo";
 					this.snackbar = true;

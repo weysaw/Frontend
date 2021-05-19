@@ -3,6 +3,7 @@ const serverStatic = require('serve-static');
 const app = express();
 const fs = require("fs");
 const https = require("https");
+const cors = require('cors')
 //Configuración
 process.env.port = 4002;
 app.use(serverStatic(__dirname + "/dist"));
@@ -16,7 +17,7 @@ const credenciales = {
 };
 
 // Configurar cabeceras y cors
-//app.use(cors());
+app.use(cors());
 const httpsServer = https.createServer(credenciales, app);
 
 httpsServer.listen(process.env.port, () => {

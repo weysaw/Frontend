@@ -5,7 +5,7 @@
 				<v-col cols="12" sm="12">
 					<h1>{{ titulo }}</h1>
 					<v-data-table
-						:headers="cabeceras"
+						:headers="vista ? cabeceras : cabeceras2"
 						:items="habientes"
 						:loading="cargando"
 						:items-per-page="5"
@@ -13,12 +13,19 @@
 					>
 						<template v-slot:top>
 							<v-toolbar flat>
-								<v-toolbar-title>Mi CRUD Cuenta Habientes</v-toolbar-title>
+								<v-toolbar-title
+									v-text="
+										vista
+											? `Mi CRUD CuentaHabientes`
+											: `Información CuentaHabientes`
+									"
+								></v-toolbar-title>
 								<v-spacer></v-spacer>
-								<AgregarHabiente></AgregarHabiente>
+								<AgregarHabiente v-if="vista"></AgregarHabiente>
 							</v-toolbar>
 						</template>
-						<template v-slot:item.acciones="{ item }">
+
+						<template v-if="vista" v-slot:item.acciones="{ item }">
 							<v-container>
 								<v-row>
 									<v-col cols="12" sm="1">
@@ -55,10 +62,13 @@ const axios = require("axios");
 export default {
 	components: { AgregarHabiente, EliminarHabiente, ModificarHabiente },
 	name: "TablaHabiente",
+	props: {
+		vista: Boolean,
+	},
 	data() {
 		return {
 			cargando: true,
-			titulo: "Tabla Habientes",
+			titulo: "Tabla CuentaHabientes",
 			textoError: ``,
 			snackbar: false,
 			habientes: [],
@@ -66,6 +76,10 @@ export default {
 				{ text: "Id Habiente", value: "id" },
 				{ text: "Nombre", value: "nombre" },
 				{ text: "Acciones", value: "acciones" },
+			],
+			cabeceras2: [
+				{ text: "Id Habiente", value: "id" },
+				{ text: "Nombre", value: "nombre" },
 			],
 		};
 	},

@@ -1,6 +1,6 @@
 <template>
 	<div class="habientes">
-		<TablaHabiente></TablaHabiente>
+		<TablaHabiente :vista="true"></TablaHabiente>
 	</div>
 </template>
 

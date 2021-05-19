@@ -7,7 +7,7 @@
 				</v-icon>
 			</template>
 			<v-card>
-				<v-card-title>Modificar Cuenta Habiente</v-card-title>
+				<v-card-title>Modificar CuentaHabiente</v-card-title>
 				<v-divider />
 				<v-card-text>
 					<v-form ref="form">
