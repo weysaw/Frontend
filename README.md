@@ -1,24 +1,6 @@
-# frontend
+# frontend simple con Vuejs y Vuetify
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Descripción
+Trata sobre un frontend que utiliza un backend sobre una base de datos de cuentasbancarias
+en este frontend se utiliza Vuejs y Vuetify, se hace los más simple de un CRUD para que un 
+usuario o un administrador puede manejar la aplicación.
